@@ -6,18 +6,32 @@ import os
 from tkinter.messagebox import showinfo
 
 numSounds = 0
-soundBoard = []
+soundBoard = ['', '', '', '', '', '', '', '', '', '', '', '']
 def add_sound(boardDisplay):
     global numSounds
-    
+    global soundBoard
     selected_sound = soundsList.selection()[0]
     soundPath = soundsList.item(selected_sound)['text']
     soundName = soundsList.item(selected_sound)['values'][0]
     if numSounds < 12:
         if soundName[-4:] == '.mp3' or soundName[-4:] == '.wav':
-            boardDisplay[numSounds].configure(text=f'sound {numSounds+1}:\n{soundName}')
-            soundBoard.append(soundPath)
-            numSounds += 1
+            for i in range(12):
+                if soundBoard[i] == '':
+                    boardDisplay[i].configure(text=f'sound {str(i+1)}:\n{soundName}')
+                    soundBoard[i] = soundPath
+                    numSounds += 1
+                    print(soundBoard)
+                    break
+
+def add_sound_spot(boardDisplay, position):
+    global numSounds
+    global soundBoard
+    selected_sound = soundsList.selection()[0]
+    soundPath = soundsList.item(selected_sound)['text']
+    soundName = soundsList.item(selected_sound)['values'][0]
+    boardDisplay[position-1].configure(text=f'sound {str(position)}:\n{soundName}')
+    soundBoard[position-1] = soundPath
+    print(soundBoard)
    
 def clear_soundboard(boardDisplay):
     global numSounds
@@ -36,7 +50,7 @@ def add_samples(directory, parent):
 
 window = tk.Tk()
 window.title('Soundboard Builder')
-window.geometry('1200x480')
+window.geometry('1250x550')
 sv_ttk.set_theme('light')
 
 sounds = ttk.Frame(window)
@@ -47,7 +61,7 @@ soundsList.heading('Sounds', text='Sounds')
 directory = 'samples'
 add_samples(directory, '')
 
-soundsList.grid(row=0, column=0, sticky='nsew')
+soundsList.grid(row=0, column=0, sticky='nsew', padx=3)
 
 soundsScroll = ttk.Scrollbar(sounds, orient=tk.VERTICAL, command=soundsList.yview)
 soundsList.configure(yscroll=soundsScroll.set)
@@ -99,5 +113,44 @@ addSound.grid(row=2, column=0, sticky='s', pady=10)
 
 clearSound = ttk.Button(soundBoardDisplay, text='Clear Soundboard', style='Accent.TButton', command=lambda:clear_soundboard(boardDisplay))
 clearSound.grid(row=2, column=5, sticky='s', pady=10)
+
+addButtons = ttk.Frame(window)
+addButtons.grid(row=1, column=0, sticky='nsew', padx = 10)
+
+button1 = ttk.Button(addButtons, text='1', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 1))
+button1.grid(row=0, column=0, sticky='nsew', padx=3, pady=3)
+
+button2 = ttk.Button(addButtons, text='2', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 2))
+button2.grid(row=0, column=1, sticky='nsew', padx=3, pady=3)
+
+button3 = ttk.Button(addButtons, text='3', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 3))
+button3.grid(row=0, column=2, sticky='nsew', padx=3, pady=3)
+
+button4 = ttk.Button(addButtons, text='4', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 4))
+button4.grid(row=0, column=3, sticky='nsew', padx=3, pady=3)
+
+button5 = ttk.Button(addButtons, text='5', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 5))
+button5.grid(row=0, column=4, sticky='nsew', padx=3, pady=3)
+
+button6 = ttk.Button(addButtons, text='6', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 6))
+button6.grid(row=0, column=5, sticky='nsew', padx=3, pady=3)
+
+button7 = ttk.Button(addButtons, text='7', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 7))
+button7.grid(row=1, column=0, sticky='nsew', padx=3, pady=3)
+
+button8 = ttk.Button(addButtons, text='8', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 8))
+button8.grid(row=1, column=1, sticky='nsew', padx=3, pady=3)
+
+button9 = ttk.Button(addButtons, text='9', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 9))
+button9.grid(row=1, column=2, sticky='nsew', padx=3, pady=3)
+
+button10 = ttk.Button(addButtons, text='10', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 10))
+button10.grid(row=1, column=3, sticky='nsew', padx=3, pady=3)
+
+button11 = ttk.Button(addButtons, text='11', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 11))
+button11.grid(row=1, column=4, sticky='nsew', padx=3, pady=3)
+
+button12 = ttk.Button(addButtons, text='12', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 12))
+button12.grid(row=1, column=5, sticky='nsew', padx=3, pady=3)
 
 window.mainloop()
