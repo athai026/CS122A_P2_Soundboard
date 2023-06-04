@@ -29,15 +29,22 @@ def add_sound_spot(boardDisplay, position):
     selected_sound = soundsList.selection()[0]
     soundPath = soundsList.item(selected_sound)['text']
     soundName = soundsList.item(selected_sound)['values'][0]
-    boardDisplay[position-1].configure(text=f'sound {str(position)}:\n{soundName}')
-    soundBoard[position-1] = soundPath
-    print(soundBoard)
+    if soundName[-4:] == '.mp3' or soundName[-4:] == '.wav':
+        boardDisplay[position-1].configure(text=f'sound {str(position)}:\n{soundName}')
+        soundBoard[position-1] = soundPath
+        print(soundBoard)
    
 def clear_soundboard(boardDisplay):
     global numSounds
     for i in range(12):
         boardDisplay[i].configure(text=f'sound {i+1}:\n')
     numSounds = 0
+
+def play_sound():
+    selected_sound = soundsList.selection()[0]
+    soundPath = soundsList.item(selected_sound)['text']
+    if soundPath[-4:] == '.mp3' or soundPath[-4:] == '.wav':
+        print(f'played sound {soundPath}')
 
 def add_samples(directory, parent):
     for item in os.listdir(directory):
@@ -54,7 +61,7 @@ window.geometry('1250x550')
 sv_ttk.set_theme('light')
 
 sounds = ttk.Frame(window)
-sounds.grid(row=0, column=0, sticky='nsew', pady=50)
+sounds.grid(row=0, column=0, sticky='nsew', padx = 10, pady=50)
 
 soundsList = ttk.Treeview(sounds, columns='Sounds', show='headings', height=13)
 soundsList.heading('Sounds', text='Sounds')
@@ -110,6 +117,9 @@ boardDisplay = [sound1, sound2, sound3, sound4, sound5, sound6, sound7, sound8, 
 
 addSound = ttk.Button(sounds, text='Add Sound', style='Accent.TButton', command=lambda:add_sound(boardDisplay))
 addSound.grid(row=2, column=0, sticky='s', pady=10)
+
+playSound = ttk.Button(sounds, text='Play Sound', style='Accent.TButton', command=lambda:play_sound())
+playSound.grid(row=3, column=0, sticky='s', pady=10)
 
 clearSound = ttk.Button(soundBoardDisplay, text='Clear Soundboard', style='Accent.TButton', command=lambda:clear_soundboard(boardDisplay))
 clearSound.grid(row=2, column=5, sticky='s', pady=10)
