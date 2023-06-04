@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import *
 import sv_ttk
 import os
 from tkinter.messagebox import showinfo
@@ -15,11 +16,11 @@ def add_samples(directory, parent):
 
 window = tk.Tk()
 window.title('Soundboard Builder')
-window.geometry('620x400')
+window.geometry('1200x480')
 sv_ttk.set_theme('light')
 
 sounds = ttk.Frame(window)
-sounds.grid(row=0, column=0, sticky='nsew')
+sounds.grid(row=0, column=0, sticky='nsew', pady=50)
 
 soundsList = ttk.Treeview(sounds, columns='Sounds', show='headings', height=13)
 soundsList.heading('Sounds', text='Sounds')
@@ -35,5 +36,45 @@ soundsScroll.grid(row=0, column=1, sticky='ns')
 addSound = ttk.Button(sounds, text='Add Sound', style='Accent.TButton')
 addSound.grid(row=1, column=0, sticky='s', pady=10)
 
-sounds.pack(side=tk.LEFT, anchor=tk.N)
+soundBoardDisplay = ttk.Frame(window)
+soundBoardDisplay.grid(row=0, column=1, sticky='nsew', padx = 20)
+
+sound1 = Label(soundBoardDisplay, text='sound 1:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound1.grid(row=0, column=0, sticky='nsew', padx=20, pady=50)
+
+sound2 = Label(soundBoardDisplay, text='sound 2:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound2.grid(row=0, column=1, sticky='nsew', padx=20, pady=50)
+
+sound3 = Label(soundBoardDisplay, text='sound 3:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound3.grid(row=0, column=2, sticky='nsew', padx=20, pady=50)
+
+sound4 = Label(soundBoardDisplay, text='sound 4:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound4.grid(row=0, column=3, sticky='nsew', padx=20, pady=50)
+
+sound5 = Label(soundBoardDisplay, text='sound 5:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound5.grid(row=0, column=4, sticky='nsew', padx=20, pady=50)
+
+sound6 = Label(soundBoardDisplay, text='sound 6:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound6.grid(row=0, column=5, sticky='nsew', padx=20, pady=50)
+
+sound7 = Label(soundBoardDisplay, text='sound 7:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound7.grid(row=1, column=0, sticky='nsew', padx=20, pady=50)
+
+sound8 = Label(soundBoardDisplay, text='sound 8:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound8.grid(row=1, column=1, sticky='nsew', padx=20, pady=50)
+
+sound9 = Label(soundBoardDisplay, text='sound 9:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound9.grid(row=1, column=2, sticky='nsew', padx=20, pady=50)
+
+sound10 = Label(soundBoardDisplay, text='sound 10:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound10.grid(row=1, column=3, sticky='nsew', padx=20, pady=50)
+
+sound11 = Label(soundBoardDisplay, text='sound 11:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound11.grid(row=1, column=4, sticky='nsew', padx=20, pady=50)
+
+sound12 = Label(soundBoardDisplay, text='sound 12:\n', width=15, height=5, borderwidth=3, relief='ridge')
+sound12.grid(row=1, column=5, sticky='nsew', padx=20, pady=50)
+
+# sounds.pack(side=tk.LEFT, anchor=tk.N)
+# soundBoardDisplay.pack()
 window.mainloop()
