@@ -6,23 +6,30 @@ import os
 from tkinter.messagebox import showinfo
 
 numSounds = 0
-def change_label(soundBoard):
+soundBoard = []
+def add_sound(boardDisplay):
     global numSounds
+    
+    selected_sound = soundsList.selection()[0]
+    soundPath = soundsList.item(selected_sound)['text']
+    soundName = soundsList.item(selected_sound)['values'][0]
     if numSounds < 12:
-        soundBoard[numSounds].configure(text=f'new text: {numSounds}')
-        numSounds += 1
-
-def clear_soundboard(soundBoard):
+        if soundName[-4:] == '.mp3' or soundName[-4:] == '.wav':
+            boardDisplay[numSounds].configure(text=f'sound {numSounds+1}:\n{soundName}')
+            soundBoard.append(soundPath)
+            numSounds += 1
+   
+def clear_soundboard(boardDisplay):
     global numSounds
     for i in range(12):
-        soundBoard[i].configure(text=f'sound {i+1}:\n')
+        boardDisplay[i].configure(text=f'sound {i+1}:\n')
     numSounds = 0
 
 def add_samples(directory, parent):
     for item in os.listdir(directory):
         path = os.path.join(directory, item)
         if os.path.isfile(path):
-            soundsList.insert(parent, tk.END, value=item)
+            soundsList.insert(parent, tk.END, value=(item,), text=str(path))
         elif os.path.isdir(path):
             folder = soundsList.insert(parent, tk.END, value=item)
             add_samples(path, folder)
@@ -85,12 +92,12 @@ sound11.grid(row=1, column=4, sticky='nsew', padx=20, pady=50)
 sound12 = Label(soundBoardDisplay, text='sound 12:\n', width=15, height=5, borderwidth=3, relief='ridge')
 sound12.grid(row=1, column=5, sticky='nsew', padx=20, pady=50)
 
-soundBoard = [sound1, sound2, sound3, sound4, sound5, sound6, sound7, sound8, sound9, sound10, sound11, sound12]
+boardDisplay = [sound1, sound2, sound3, sound4, sound5, sound6, sound7, sound8, sound9, sound10, sound11, sound12]
 
-addSound = ttk.Button(sounds, text='Add Sound', style='Accent.TButton', command=lambda:change_label(soundBoard))
-addSound.grid(row=1, column=0, sticky='s', pady=10)
+addSound = ttk.Button(sounds, text='Add Sound', style='Accent.TButton', command=lambda:add_sound(boardDisplay))
+addSound.grid(row=2, column=0, sticky='s', pady=10)
 
-clearSound = ttk.Button(soundBoardDisplay, text='Clear Soundboard', style='Accent.TButton', command=lambda:clear_soundboard(soundBoard))
+clearSound = ttk.Button(soundBoardDisplay, text='Clear Soundboard', style='Accent.TButton', command=lambda:clear_soundboard(boardDisplay))
 clearSound.grid(row=2, column=5, sticky='s', pady=10)
 
 window.mainloop()
