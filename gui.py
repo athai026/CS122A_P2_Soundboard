@@ -45,6 +45,15 @@ def play_sound():
     soundPath = soundsList.item(selected_sound)['text']
     if soundPath[-4:] == '.mp3' or soundPath[-4:] == '.wav':
         print(f'played sound {soundPath}')
+        # play sound
+
+def load_in_soundBoard():
+    # use rfid.read()
+    print('read')
+
+def save_soundBoard():
+    # use rfid.write()
+    print('write')
 
 def add_samples(directory, parent):
     for item in os.listdir(directory):
@@ -57,7 +66,7 @@ def add_samples(directory, parent):
 
 window = tk.Tk()
 window.title('Soundboard Builder')
-window.geometry('1250x550')
+window.geometry('1250x600')
 sv_ttk.set_theme('light')
 
 sounds = ttk.Frame(window)
@@ -162,5 +171,14 @@ button11.grid(row=1, column=4, sticky='nsew', padx=3, pady=3)
 
 button12 = ttk.Button(addButtons, text='12', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 12))
 button12.grid(row=1, column=5, sticky='nsew', padx=3, pady=3)
+
+readWrite = ttk.Frame(window)
+readWrite.grid(row=1, column=1, sticky='nsew', padx = 380)
+
+readButton= ttk.Button(readWrite, text='Read', style='Accent.TButton', command=lambda:load_in_soundBoard())
+readButton.grid(row=0, column=3, sticky='nsew', padx=20, pady=3)
+
+writeButton= ttk.Button(readWrite, text='Write', style='Accent.TButton', command=lambda:save_soundBoard())
+writeButton.grid(row=0, column=4, sticky='nsew', padx=20, pady=3)
 
 window.mainloop()
