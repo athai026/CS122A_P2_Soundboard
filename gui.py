@@ -67,7 +67,7 @@ def add_samples(directory, parent):
 
 window = tk.Tk()
 window.title('Soundboard Builder')
-window.geometry('1250x600')
+window.geometry('1400x650')
 sv_ttk.set_theme('light')
 
 sounds = ttk.Frame(window)
