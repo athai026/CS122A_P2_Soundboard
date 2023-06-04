@@ -38,6 +38,7 @@ def clear_soundboard(boardDisplay):
     global numSounds
     for i in range(12):
         boardDisplay[i].configure(text=f'sound {i+1}:\n')
+        soundBoard[i] = ''
     numSounds = 0
 
 def play_sound():
