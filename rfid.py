@@ -34,3 +34,22 @@ def read():
     print(text)
     lcd.lcd_string('Read:', lcd.LCD_LINE_1)
     lcd.lcd_string(text, lcd.LCD_LINE_2)
+
+def gui_write(soundboard):
+    lcd.lcd_string('Writing...', lcd.LCD_LINE_1)
+    lcd.lcd_string('Place tag', lcd.LCD_LINE_2)
+
+    text = ''
+    for i in range(12):
+        if i < 11:
+            text += soundboard[i] + ','
+        else:
+            text += soundboard[i]
+    print(text)
+
+    reader.write(text)
+    speaker.p.start(70)
+    time.sleep(0.2)
+    speaker.p.stop()
+    lcd.lcd_string('Written', lcd.LCD_LINE_1)
+    lcd.lcd_string('', lcd.LCD_LINE_2)

@@ -5,6 +5,13 @@ import sv_ttk
 import os
 from tkinter.messagebox import showinfo
 
+import touch
+import rfid
+import lcd
+import speaker
+import button
+import RPi.GPIO as GPIO
+
 numSounds = 0
 soundBoard = ['', '', '', '', '', '', '', '', '', '', '', '']
 def add_sound(boardDisplay):
@@ -50,10 +57,12 @@ def play_sound():
 
 def load_in_soundBoard():
     # use rfid.read()
+    rfid.read()
     print('read')
 
 def save_soundBoard():
     # use rfid.write()
+    rfid.gui_write(soundBoard)
     print('write')
 
 def add_samples(directory, parent):
@@ -182,4 +191,6 @@ readButton.grid(row=0, column=3, sticky='nsew', padx=20, pady=3)
 writeButton= ttk.Button(readWrite, text='Write', style='Accent.TButton', command=lambda:save_soundBoard())
 writeButton.grid(row=0, column=4, sticky='nsew', padx=20, pady=3)
 
+lcd.lcd_start()
+lcd.lcd_string('touch ready', lcd.LCD_LINE_1)
 window.mainloop()
