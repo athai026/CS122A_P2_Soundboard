@@ -30,8 +30,9 @@ def gui_sense(soundboard, soundsList, sounds):
             print("Input {} touched!".format(i+1))
             lcd.lcd_string("Sound {} touched".format(i+1), lcd.LCD_LINE_1)
             lcd.lcd_string('', lcd.LCD_LINE_2)
-            if not pressed[i]:
-                pygame.mixer.Channel(i).play(sounds[i])
-                pressed[i] = True
+            if sounds[i]:
+                if not pressed[i]:
+                    pygame.mixer.Channel(i).play(sounds[i])
+                    pressed[i] = True
         else:
             pressed[i] = False

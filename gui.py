@@ -64,59 +64,96 @@ def play_sound():
 
 def load_onto_soundboard(playSound):
     sounds = []
-    sound1 = pygame.mixer.Sound(soundsList.item(soundBoard[0])['text'])
-    sound1.set_volume(1.0)
+    if soundBoard[0] != '0':
+        sound1 = pygame.mixer.Sound(soundsList.item(soundBoard[0])['text'])
+        sound1.set_volume(1.0)
+    else: 
+        sound1 = ''
     sounds.append(sound1)
 
-    sound2 = pygame.mixer.Sound(soundsList.item(soundBoard[1])['text'])
-    sound2.set_volume(1.0)
+    if soundBoard[1] != '0':
+        sound2 = pygame.mixer.Sound(soundsList.item(soundBoard[1])['text'])
+        sound2.set_volume(1.0)
+    else:
+        sound2 = ''
     sounds.append(sound2)
 
-    sound3 = pygame.mixer.Sound(soundsList.item(soundBoard[2])['text'])
-    sound3.set_volume(1.0)
+    if soundBoard[2] != '0':
+        sound3 = pygame.mixer.Sound(soundsList.item(soundBoard[2])['text'])
+        sound3.set_volume(1.0)
+    else:
+        sound3 = ''
     sounds.append(sound3)
 
-    sound4 = pygame.mixer.Sound(soundsList.item(soundBoard[3])['text'])
-    sound4.set_volume(1.0)
+    if soundBoard[3] != '0':
+        sound4 = pygame.mixer.Sound(soundsList.item(soundBoard[3])['text'])
+        sound4.set_volume(1.0)
+    else:
+        sound4 = ''
     sounds.append(sound4)
 
-    sound5 = pygame.mixer.Sound(soundsList.item(soundBoard[4])['text'])
-    sound5.set_volume(1.0)
+    if soundBoard[4] != '0':
+        sound5 = pygame.mixer.Sound(soundsList.item(soundBoard[4])['text'])
+        sound5.set_volume(1.0)
+    else:
+        sound5 = ''
     sounds.append(sound5)
 
-    sound6 = pygame.mixer.Sound(soundsList.item(soundBoard[5])['text'])
-    sound6.set_volume(1.0)
+    if soundBoard[5] != '0':
+        sound6 = pygame.mixer.Sound(soundsList.item(soundBoard[5])['text'])
+        sound6.set_volume(1.0)
+    else:
+        sound6 = ''
     sounds.append(sound6)
     
-    sound7 = pygame.mixer.Sound(soundsList.item(soundBoard[6])['text'])
-    sound7.set_volume(1.0)
+    if soundBoard[6] != '0':
+        sound7 = pygame.mixer.Sound(soundsList.item(soundBoard[6])['text'])
+        sound7.set_volume(1.0)
+    else:
+        sound7 = ''
     sounds.append(sound7)
     
-    sound8 = pygame.mixer.Sound(soundsList.item(soundBoard[7])['text'])
-    sound8.set_volume(1.0)
+    if soundBoard[7] != '0':
+        sound8 = pygame.mixer.Sound(soundsList.item(soundBoard[7])['text'])
+        sound8.set_volume(1.0)
+    else:
+        sound8 = ''
     sounds.append(sound8)
 
-    sound9 = pygame.mixer.Sound(soundsList.item(soundBoard[8])['text'])
-    sound9.set_volume(1.0)
+    if soundBoard[8] != '0':
+        sound9 = pygame.mixer.Sound(soundsList.item(soundBoard[8])['text'])
+        sound9.set_volume(1.0)
+    else:
+        sound9 = ''
     sounds.append(sound9)
 
-    sound10 = pygame.mixer.Sound(soundsList.item(soundBoard[9])['text'])
-    sound10.set_volume(1.0)
+    if soundBoard[9] != '0':
+        sound10 = pygame.mixer.Sound(soundsList.item(soundBoard[9])['text'])
+        sound10.set_volume(1.0)
+    else:
+        sound10 = ''
     sounds.append(sound10)
 
-    sound11 = pygame.mixer.Sound(soundsList.item(soundBoard[10])['text'])
-    sound11.set_volume(1.0)
+    if soundBoard[10] != '0':
+        sound11 = pygame.mixer.Sound(soundsList.item(soundBoard[10])['text'])
+        sound11.set_volume(1.0)
+    else:
+        sound11 = ''
     sounds.append(sound11)
 
-    sound12 = pygame.mixer.Sound(soundsList.item(soundBoard[11])['text'])
-    sound12.set_volume(1.0)
+    if soundBoard[11] != '0':
+        sound12 = pygame.mixer.Sound(soundsList.item(soundBoard[11])['text'])
+        sound12.set_volume(1.0)
+    else:
+        sound12 = ''
     sounds.append(sound12)
 
     while playSound:
         touch.gui_sense(soundBoard, soundsList, sounds)
         if GPIO.input(19):
             for x in sounds:
-                x.stop()
+                if x:
+                    x.stop()
             break
 
 def load_in_soundBoard():
@@ -125,8 +162,11 @@ def load_in_soundBoard():
     soundBoard = rfid.gui_read()
     print('read')
     for i in range(12):
-        soundName = soundsList.item(soundBoard[i])['values'][0]
-        boardDisplay[i].configure(text=f'sound {str(i+1)}:\n{soundName}')
+        if soundBoard[i] != '0':
+            soundName = soundsList.item(soundBoard[i])['values'][0]
+            boardDisplay[i].configure(text=f'sound {str(i+1)}:\n{soundName}')
+        else:
+            boardDisplay[i].configure(text=f'sound {str(i+1)}:\n')
 
 def save_soundBoard():
     # use rfid.write()
@@ -166,8 +206,11 @@ def load_local_soundBoard():
     soundBoard[11] = soundBoard[11].strip()
     print(soundBoard)
     for i in range(12):
-        soundName = soundsList.item(soundBoard[i])['values'][0]
-        boardDisplay[i].configure(text=f'sound {str(i+1)}:\n{soundName}')
+        if soundBoard[i] != '0':
+            soundName = soundsList.item(soundBoard[i])['values'][0]
+            boardDisplay[i].configure(text=f'sound {str(i+1)}:\n{soundName}')
+        else:
+            boardDisplay[i].configure(text=f'sound {str(i+1)}:\n')
 
 def reloadSaves():
     localSaveList.delete(*localSaveList.get_children())
