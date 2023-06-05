@@ -53,3 +53,22 @@ def gui_write(soundboard):
     speaker.p.stop()
     lcd.lcd_string('Written', lcd.LCD_LINE_1)
     lcd.lcd_string('', lcd.LCD_LINE_2)
+
+def gui_read():
+    lcd.lcd_string('Reading...', lcd.LCD_LINE_1)
+    lcd.lcd_string('', lcd.LCD_LINE_2)
+    print('place tag to read')
+    id, text = reader.read()
+    speaker.p.start(70)
+    time.sleep(0.2)
+    speaker.p.stop()
+    print('read')
+    print(id)
+    print(text)
+    lcd.lcd_string('Read', lcd.LCD_LINE_1)
+    lcd.lcd_string('', lcd.LCD_LINE_2)
+
+    soundboard = text.split(',')
+    soundboard[11] = soundboard[11].strip()
+    print(soundboard)
+    return soundboard

@@ -13,19 +13,20 @@ import button
 import RPi.GPIO as GPIO
 
 numSounds = 0
-soundBoard = ['', '', '', '', '', '', '', '', '', '', '', '']
+soundBoard = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
 def add_sound(boardDisplay):
     global numSounds
     global soundBoard
     selected_sound = soundsList.selection()[0]
+    print(selected_sound)
     soundPath = soundsList.item(selected_sound)['text']
     soundName = soundsList.item(selected_sound)['values'][0]
     if numSounds < 12:
         if soundName[-4:] == '.mp3' or soundName[-4:] == '.wav':
             for i in range(12):
-                if soundBoard[i] == '':
+                if soundBoard[i] == '0':
                     boardDisplay[i].configure(text=f'sound {str(i+1)}:\n{soundName}')
-                    soundBoard[i] = soundPath
+                    soundBoard[i] = selected_sound
                     numSounds += 1
                     print(soundBoard)
                     break
@@ -34,18 +35,19 @@ def add_sound_spot(boardDisplay, position):
     global numSounds
     global soundBoard
     selected_sound = soundsList.selection()[0]
+    print(selected_sound)
     soundPath = soundsList.item(selected_sound)['text']
     soundName = soundsList.item(selected_sound)['values'][0]
     if soundName[-4:] == '.mp3' or soundName[-4:] == '.wav':
         boardDisplay[position-1].configure(text=f'sound {str(position)}:\n{soundName}')
-        soundBoard[position-1] = soundPath
+        soundBoard[position-1] = selected_sound
         print(soundBoard)
    
 def clear_soundboard(boardDisplay):
     global numSounds
     for i in range(12):
         boardDisplay[i].configure(text=f'sound {i+1}:\n')
-        soundBoard[i] = ''
+        soundBoard[i] = '0'
     numSounds = 0
 
 def play_sound():
@@ -56,20 +58,27 @@ def play_sound():
         # play sound
 
 def load_in_soundBoard():
+    global soundBoard
     # use rfid.read()
-    rfid.read()
+    soundBoard =rfid.gui_read()
     print('read')
+    for i in range(12):
+        soundName = soundsList.item(soundBoard[i])['values'][0]
+        boardDisplay[i-1].configure(text=f'sound {str(i)}:\n{soundName}')
 
 def save_soundBoard():
     # use rfid.write()
     rfid.gui_write(soundBoard)
     print('write')
 
+soundID = 1
 def add_samples(directory, parent):
+    global soundID
     for item in os.listdir(directory):
         path = os.path.join(directory, item)
         if os.path.isfile(path):
-            soundsList.insert(parent, tk.END, value=(item,), text=str(path))
+            soundsList.insert(parent, tk.END, iid=soundID, value=(item,), text=str(path))
+            soundID += 1
         elif os.path.isdir(path):
             folder = soundsList.insert(parent, tk.END, value=item)
             add_samples(path, folder)
