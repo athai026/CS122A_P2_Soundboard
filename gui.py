@@ -133,8 +133,6 @@ def save_soundBoard():
     print('write')
 
 def local_save_soundBoard(fileName):
-    print('in function')
-    print(fileName)
     if fileName == '':
         return
     else:
@@ -151,15 +149,34 @@ def local_save_soundBoard(fileName):
     with open(filePath, 'w') as txtFile:
         txtFile.write(text)
     
-def load_local_soundBoard(filePath):
+    reloadSaves()
+    
+def load_local_soundBoard():
     global soundBoard
     soundBoard = []
-    with open(filePath, 'r') as txtFile:
+
+    selected_board = localSaveList.selection()[0]
+    boardPath = localSaveList.item(selected_board)['text']
+
+    with open(boardPath, 'r') as txtFile:
         text = txtFile.read()
     print(text)
     soundBoard = text.split(',')
     soundBoard[11] = soundBoard[11].strip()
     print(soundBoard)
+    for i in range(12):
+        soundName = soundsList.item(soundBoard[i])['values'][0]
+        boardDisplay[i].configure(text=f'sound {str(i+1)}:\n{soundName}')
+
+def reloadSaves():
+    localSaveList.delete(*localSaveList.get_children())
+    add_saves('localSave', '')
+
+def delete_board():
+    selected_board = localSaveList.selection()[0]
+    boardPath = localSaveList.item(selected_board)['text']
+    localSaveList.delete(selected_board)
+    os.remove(boardPath)
 
 soundID = 1
 def add_samples(directory, parent):
@@ -167,10 +184,21 @@ def add_samples(directory, parent):
     for item in os.listdir(directory):
         path = os.path.join(directory, item)
         if os.path.isfile(path):
-            soundsList.insert(parent, tk.END, iid=soundID, value=(item,), text=str(path))
-            soundID += 1
+            if item[-4:] == '.ogg':
+                soundsList.insert(parent, tk.END, iid=soundID, value=(item,), text=str(path))
+                soundID += 1
         elif os.path.isdir(path):
             folder = soundsList.insert(parent, tk.END, value=item)
+            add_samples(path, folder)
+
+def add_saves(directory, parent):
+    for item in os.listdir(directory):
+        path = os.path.join(directory, item)
+        if os.path.isfile(path):
+            if item[-4:] == '.txt':
+                localSaveList.insert(parent, tk.END, value=(item,), text=str(path))
+        elif os.path.isdir(path):
+            folder = localSaveList.insert(parent, tk.END, value=item)
             add_samples(path, folder)
 
 window = tk.Tk()
@@ -180,9 +208,9 @@ sv_ttk.set_theme('light')
 
 tabControl = ttk.Notebook(window)
 mainTab = ttk.Frame(tabControl)
-localLoadTab = ttk.Frame(tabControl)
+localTab = ttk.Frame(tabControl)
 tabControl.add(mainTab, text='Build Your Soundboard')
-tabControl.add(localLoadTab, text='Load Soundboard from Local')
+tabControl.add(localTab, text='Save & Load Soundboard Locally')
 tabControl.pack(expand=1, fill='both')
 
 soundsFrame = ttk.Frame(mainTab)
@@ -300,17 +328,40 @@ readButton.grid(row=0, column=3, sticky='nsew', padx=20, pady=3)
 writeButton = ttk.Button(read_writeFrame, text='Write to RFID Tag', style='Accent.TButton', command=lambda:save_soundBoard())
 writeButton.grid(row=0, column=4, sticky='nsew', padx=20, pady=3)
 
-localSaveFrame = ttk.Frame(mainTab)
-localSaveFrame.grid(row=2, column=1, sticky='nsew', padx=10)
+localFrame = ttk.Frame(localTab)
+localFrame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+localSaveFrame = ttk.Frame(localFrame)
+localSaveFrame.grid(row=0, column=0, sticky='nsew', padx=10)
 
 prompt = Label(localSaveFrame, text='Enter a name for your soundboard:')
-prompt.grid(row=0, column=0, padx=440)
+prompt.grid(row=0, column=0)
 
 inputName = Entry(localSaveFrame)
 inputName.grid(row=1, column=0, padx=10)
 
 localSaveButton = ttk.Button(localSaveFrame, text='Save', style='Accent.TButton', command=lambda:local_save_soundBoard(inputName.get()))
 localSaveButton.grid(row=2, column=0, pady=10)
+
+localLoadFrame = ttk.Frame(localFrame)
+localLoadFrame.grid(row=0, column=1, sticky='nsew', padx = 10)
+
+localSaveList = ttk.Treeview(localLoadFrame, columns='Local_Saves', show='headings', height=13)
+localSaveList.heading('Local_Saves', text='Local Saves')
+directory = 'localSave'
+add_saves(directory, '')
+
+localSaveList.grid(row=0, column=0, sticky='nsew', padx=3)
+
+localSaveScroll = ttk.Scrollbar(localLoadFrame, orient=tk.VERTICAL, command=localSaveList.yview)
+localSaveList.configure(yscroll=localSaveScroll.set)
+localSaveScroll.grid(row=0, column=1, sticky='ns')
+
+loadBoard = ttk.Button(localLoadFrame, text='Load in Soundboard', style='Accent.TButton', command=lambda:load_local_soundBoard())
+loadBoard.grid(row=2, column=0, sticky='s', pady=10)
+
+deleteBoard = ttk.Button(localLoadFrame, text='Delete Soundboard', style='Accent.TButton', command=lambda:delete_board())
+deleteBoard.grid(row=3, column=0, sticky='s', pady=10)
 
 lcd.lcd_start()
 lcd.lcd_string('touch ready', lcd.LCD_LINE_1)
