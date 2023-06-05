@@ -8,6 +8,7 @@ import pygame
 import csv
 import pandas as pd
 
+import file
 import touch
 import rfid
 import lcd
@@ -178,15 +179,16 @@ def delete_board():
     localSaveList.delete(selected_board)
     os.remove(boardPath)
 
-soundID = 1
+# soundID = 1
 def add_samples(directory, parent):
-    global soundID
-    for item in os.listdir(directory):
+    # global soundID
+    sorted_dir = sorted(os.listdir(directory))
+    for item in sorted_dir:
         path = os.path.join(directory, item)
         if os.path.isfile(path):
             if item[-4:] == '.ogg':
-                soundsList.insert(parent, tk.END, iid=soundID, value=(item,), text=str(path))
-                soundID += 1
+                soundsList.insert(parent, tk.END, iid=file.files[item], value=(item,), text=str(path))
+                # soundID += 1
         elif os.path.isdir(path):
             folder = soundsList.insert(parent, tk.END, value=item)
             add_samples(path, folder)
