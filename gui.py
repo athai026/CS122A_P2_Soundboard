@@ -4,6 +4,7 @@ from tkinter import *
 import sv_ttk
 import os
 from tkinter.messagebox import showinfo
+import pygame
 
 import touch
 import rfid
@@ -54,8 +55,9 @@ def play_sound():
     selected_sound = soundsList.selection()[0]
     soundPath = soundsList.item(selected_sound)['text']
     if soundPath[-4:] == '.mp3' or soundPath[-4:] == '.wav':
+        pygame.mixer.music.load(soundPath)
+        pygame.mixer.music.play()
         print(f'played sound {soundPath}')
-        # play sound
 
 def load_in_soundBoard():
     global soundBoard
@@ -202,4 +204,5 @@ writeButton.grid(row=0, column=4, sticky='nsew', padx=20, pady=3)
 
 lcd.lcd_start()
 lcd.lcd_string('touch ready', lcd.LCD_LINE_1)
+pygame.mixer.init()
 window.mainloop()
