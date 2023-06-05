@@ -21,8 +21,7 @@ def sense():
             lcd.lcd_string("Input {} touched".format(i), lcd.LCD_LINE_1)
             lcd.lcd_string('', lcd.LCD_LINE_2)
     time.sleep(0.1)  
-pygame.mixer.init()
-pygame.mixer.set_num_channels(12)
+
 pressed = [False, False, False, False, False, False, False, False, False, False, False, False]
 def gui_sense(soundboard, soundsList, sounds):
     global pressed
