@@ -175,10 +175,17 @@ def add_samples(directory, parent):
 
 window = tk.Tk()
 window.title('Soundboard Builder')
-window.geometry('1400x700')
+window.geometry('1400x750')
 sv_ttk.set_theme('light')
 
-soundsFrame = ttk.Frame(window)
+tabControl = ttk.Notebook(window)
+mainTab = ttk.Frame(tabControl)
+localLoadTab = ttk.Frame(tabControl)
+tabControl.add(mainTab, text='Build Your Soundboard')
+tabControl.add(localLoadTab, text='Load Soundboard from Local')
+tabControl.pack(expand=1, fill='both')
+
+soundsFrame = ttk.Frame(mainTab)
 soundsFrame.grid(row=0, column=0, sticky='nsew', padx = 10, pady=50)
 
 soundsList = ttk.Treeview(soundsFrame, columns='Sounds', show='headings', height=13)
@@ -192,7 +199,7 @@ soundsScroll = ttk.Scrollbar(soundsFrame, orient=tk.VERTICAL, command=soundsList
 soundsList.configure(yscroll=soundsScroll.set)
 soundsScroll.grid(row=0, column=1, sticky='ns')
 
-soundBoardDisplayFrame = ttk.Frame(window)
+soundBoardDisplayFrame = ttk.Frame(mainTab)
 soundBoardDisplayFrame.grid(row=0, column=1, sticky='nsew', padx = 20)
 
 sound1 = Label(soundBoardDisplayFrame, text='sound 1:\n', width=15, height=5, borderwidth=3, relief='ridge')
@@ -245,7 +252,7 @@ clearSound.grid(row=2, column=5, sticky='s', pady=10)
 loadSound = ttk.Button(soundBoardDisplayFrame, text='Load Soundboard', style='Accent.TButton', command=lambda:load_onto_soundboard(True))
 loadSound.grid(row=2, column=4, sticky='s', pady=10)
 
-addButtonsFrame = ttk.Frame(window)
+addButtonsFrame = ttk.Frame(mainTab)
 addButtonsFrame.grid(row=1, column=0, sticky='nsew', padx = 10)
 
 button1 = ttk.Button(addButtonsFrame, text='1', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 1))
@@ -284,8 +291,8 @@ button11.grid(row=1, column=4, sticky='nsew', padx=3, pady=3)
 button12 = ttk.Button(addButtonsFrame, text='12', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 12))
 button12.grid(row=1, column=5, sticky='nsew', padx=3, pady=3)
 
-read_writeFrame = ttk.Frame(window)
-read_writeFrame.grid(row=1, column=1, sticky='nsew', padx = 400)
+read_writeFrame = ttk.Frame(mainTab)
+read_writeFrame.grid(row=1, column=1, sticky='nsew', padx=400)
 
 readButton = ttk.Button(read_writeFrame, text='Scan RFID Tag', style='Accent.TButton', command=lambda:load_in_soundBoard())
 readButton.grid(row=0, column=3, sticky='nsew', padx=20, pady=3)
@@ -293,17 +300,17 @@ readButton.grid(row=0, column=3, sticky='nsew', padx=20, pady=3)
 writeButton = ttk.Button(read_writeFrame, text='Write to RFID Tag', style='Accent.TButton', command=lambda:save_soundBoard())
 writeButton.grid(row=0, column=4, sticky='nsew', padx=20, pady=3)
 
-localSaveFrame = ttk.Frame(window)
+localSaveFrame = ttk.Frame(mainTab)
 localSaveFrame.grid(row=2, column=1, sticky='nsew', padx=10)
 
 prompt = Label(localSaveFrame, text='Enter a name for your soundboard:')
-prompt.grid(row=0, column=0, padx=10)
+prompt.grid(row=0, column=0, padx=440)
 
 inputName = Entry(localSaveFrame)
 inputName.grid(row=1, column=0, padx=10)
 
 localSaveButton = ttk.Button(localSaveFrame, text='Save', style='Accent.TButton', command=lambda:local_save_soundBoard(inputName.get()))
-localSaveButton.grid(row=1, column=1, padx=10)
+localSaveButton.grid(row=2, column=0, pady=10)
 
 lcd.lcd_start()
 lcd.lcd_string('touch ready', lcd.LCD_LINE_1)
