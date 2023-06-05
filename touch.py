@@ -18,4 +18,4 @@ def sense():
             print("Input {} touched!".format(i))
             lcd.lcd_string("Input {} touched".format(i), lcd.LCD_LINE_1)
             lcd.lcd_string('', lcd.LCD_LINE_2)
-    time.sleep(0.25)  
+    time.sleep(0.1)  
