@@ -10,8 +10,75 @@ import touch
 import rfid
 import lcd
 
+##################### SPOTIFY API #####################
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+
+username = '21qhraopzibkwwradhzjxpjla'
+clientID = '39f9ba37851448068fd71b68b88dec3b'
+clientSecret = 'd9ea3a914c114f5d9781eb62db2b37bc'
+redirect_uri = 'http://google.com/callback/'
+oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri)
+token_dict = oauth_object.get_access_token()
+token = token_dict['access_token']
+spotifyObject = spotipy.Spotify(auth=token)
+user_name = spotifyObject.current_user()
+scope = "user-read-playback-state,user-modify-playback-state"
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, client_id=clientID, client_secret=clientSecret, redirect_uri=redirect_uri))
+##################### SPOTIFY API #####################
+
+##################### GLOBAL VARIABLES #####################
 numSounds = 0
 soundBoard = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+songPlaying = False
+resume_position = 0
+songURI = ''
+##################### GLOBAL VARIABLES #####################
+
+# get spotify song uri
+def get_songURI(songName):
+    global songURI
+    results = spotifyObject.search(songName, 1, 0, "track")
+    songs_dict = results['tracks']
+    song_items = songs_dict['items']
+    songURL = song_items[0]['external_urls']['spotify']
+    uri = songURL.split('/')[-1].split('?')[0]
+    songURI = 'spotify:track:' + uri
+
+# play spotify song
+def play_song(songName):
+    global songPlaying
+    global songURI
+    get_songURI(songName)
+    sp.start_playback(uris=[songURI])
+    songPlaying = True
+
+# pause spotify song
+def pause_song():
+    global songPlaying
+    global resume_position
+    if songPlaying:
+        sp.pause_playback()
+        playback = sp.current_playback()
+        if playback and 'progress_ms' in playback:
+            resume_position = playback['progress_ms']
+        songPlaying = False
+
+# resume spotify song
+def resume_song():
+    global songPlaying
+    global resume_position
+    global songURI
+    if not songPlaying:
+        sp.start_playback(uris=[songURI], position_ms=resume_position)
+        songPlaying = True
+
+# restart spotify song
+def restart_song():
+    global songPlaying
+    global songURI
+    sp.start_playback(uris=[songURI])
+    songPlaying = True
 
 # add sound bite to soundboard sequentially
 def add_sound(boardDisplay):
@@ -265,8 +332,10 @@ sv_ttk.set_theme('light')
 tabControl = ttk.Notebook(window)
 mainTab = ttk.Frame(tabControl)
 localTab = ttk.Frame(tabControl)
+spotifyTab = ttk.Frame(tabControl)
 tabControl.add(mainTab, text='Build Your Soundboard')
 tabControl.add(localTab, text='Save & Load Soundboard Locally')
+tabControl.add(spotifyTab, text='Spotify')
 tabControl.pack(expand=1, fill='both')
 
 soundsFrame = ttk.Frame(mainTab)
@@ -462,8 +531,37 @@ loadBoard.grid(row=2, column=0, sticky='s', pady=10)
 deleteBoard = ttk.Button(localLoadFrame, text='Delete Soundboard', style='Accent.TButton', command=lambda:delete_board())
 deleteBoard.grid(row=3, column=0, sticky='s', pady=10)
 
+spotifyFrame = ttk.Frame(spotifyTab)
+spotifyFrame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+searchPromptFrame = ttk.Frame(spotifyFrame)
+searchPromptFrame.grid(row=0, column=0, padx=10, pady=10)
+
+spotifyPrompt = Label(searchPromptFrame, text='Enter a song name:')
+spotifyPrompt.grid(row=0, column=0)
+
+searchSong = Entry(searchPromptFrame, highlightbackground='#1D8954')
+searchSong.grid(row=1, column=0, padx=10)
+
+spotifyButtonsFrame = ttk.Frame(spotifyFrame)
+spotifyButtonsFrame.grid(row=1, column=0, padx=10, pady=10)
+
+playSongButton = Button(spotifyButtonsFrame, text='Play', bg='#1D8954', fg='white', command=lambda:play_song(searchSong.get()))
+playSongButton.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
+
+pauseSongButton = Button(spotifyButtonsFrame, text='Pause', bg='#1D8954', fg='white', command=lambda:pause_song())
+pauseSongButton.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
+
+resumeSongButton = Button(spotifyButtonsFrame, text='Resume', bg='#1D8954', fg='white', command=lambda:resume_song())
+resumeSongButton.grid(row=1, column=0, sticky='nsew', padx=10, pady=10)
+
+restartSongButton = Button(spotifyButtonsFrame, text='Restart', bg='#1D8954', fg='white', command=lambda:restart_song())
+restartSongButton.grid(row=1, column=1, sticky='nsew', padx=10, pady=10)
+
+
 lcd.lcd_start()
 lcd.lcd_string('touch ready', lcd.LCD_LINE_1)
 pygame.mixer.init()
 pygame.mixer.set_num_channels(12)
 window.mainloop()
+sp.pause_playback()
