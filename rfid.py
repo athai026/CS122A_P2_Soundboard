@@ -8,22 +8,21 @@ import time
 
 reader = SimpleMFRC522()
 
-def write():
-    lcd.lcd_string('Writing...', lcd.LCD_LINE_1)
-    lcd.lcd_string('', lcd.LCD_LINE_2)
-    text = input('New data: ')
+def write(text):
+    lcd.lcd_string('Place tag to', lcd.LCD_LINE_1)
+    lcd.lcd_string('write', lcd.LCD_LINE_2)
     print('now place your tag to write')
     reader.write(text)
     speaker.p.start(70)
     time.sleep(0.2)
     speaker.p.stop()
     print('written')
-    lcd.lcd_string('Written:', lcd.LCD_LINE_1)
-    lcd.lcd_string(text, lcd.LCD_LINE_2)
+    lcd.lcd_string('Tag Written', lcd.LCD_LINE_1)
+    lcd.lcd_string('', lcd.LCD_LINE_2)
 
 def read():
-    lcd.lcd_string('Reading...', lcd.LCD_LINE_1)
-    lcd.lcd_string('', lcd.LCD_LINE_2)
+    lcd.lcd_string('Place tag to', lcd.LCD_LINE_1)
+    lcd.lcd_string('read', lcd.LCD_LINE_2)
     print('place tag to read')
     id, text = reader.read()
     speaker.p.start(70)
@@ -32,8 +31,9 @@ def read():
     print('read')
     print(id)
     print(text)
-    lcd.lcd_string('Read:', lcd.LCD_LINE_1)
-    lcd.lcd_string(text, lcd.LCD_LINE_2)
+    lcd.lcd_string('Tag Read', lcd.LCD_LINE_1)
+    lcd.lcd_string('', lcd.LCD_LINE_2)
+    return text
 
 def gui_write(soundboard):
     lcd.lcd_string('Place tag to', lcd.LCD_LINE_1)
