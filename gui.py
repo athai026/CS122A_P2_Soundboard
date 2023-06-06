@@ -45,7 +45,15 @@ def add_sound_spot(boardDisplay, position):
     if soundName[-4:] == '.ogg':
         boardDisplay[position-1].configure(text=f'sound {str(position)}:\n{soundName}')
         soundBoard[position-1] = selected_sound
+        numSounds += 1
         print(soundBoard)
+
+def clear_sound_spot(boardDisplay, position):
+    global numSounds
+    global soundBoard
+    boardDisplay[position-1].configure(text=f'sound {str(position)}:\n')
+    soundBoard[position-1] = '0'
+    numSounds -= 1
    
 def clear_soundboard(boardDisplay):
     global numSounds
@@ -248,7 +256,7 @@ def add_saves(directory, parent):
 
 window = tk.Tk()
 window.title('Soundboard Builder')
-window.geometry('1400x750')
+window.geometry('1450x750')
 sv_ttk.set_theme('light')
 
 tabControl = ttk.Notebook(window)
@@ -363,6 +371,49 @@ button11.grid(row=1, column=4, sticky='nsew', padx=3, pady=3)
 
 button12 = ttk.Button(addButtonsFrame, text='12', style='Accent.TButton', command=lambda:add_sound_spot(boardDisplay, 12))
 button12.grid(row=1, column=5, sticky='nsew', padx=3, pady=3)
+
+clearButtonsFrame = ttk.Frame(mainTab)
+clearButtonsFrame.grid(row=2, column=0, sticky='nsew', padx = 10, pady=30)
+
+cbutton_style = ttk.Style()
+cbutton_style.configure('Custom.TButton', background='red')
+
+cbutton1 = Button(clearButtonsFrame, text='1', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 1))
+cbutton1.grid(row=0, column=0, sticky='nsew', padx=3, pady=3)
+
+cbutton2 = Button(clearButtonsFrame, text='2', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 2))
+cbutton2.grid(row=0, column=1, sticky='nsew', padx=3, pady=3)
+
+cbutton3 = Button(clearButtonsFrame, text='3', bg='red', fg='white',  command=lambda:clear_sound_spot(boardDisplay, 3))
+cbutton3.grid(row=0, column=2, sticky='nsew', padx=3, pady=3)
+
+cbutton4 = Button(clearButtonsFrame, text='4', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 4))
+cbutton4.grid(row=0, column=3, sticky='nsew', padx=3, pady=3)
+
+cbutton5 = Button(clearButtonsFrame, text='5', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 5))
+cbutton5.grid(row=0, column=4, sticky='nsew', padx=3, pady=3)
+
+cbutton6 = Button(clearButtonsFrame, text='6', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 6))
+cbutton6.grid(row=0, column=5, sticky='nsew', padx=3, pady=3)
+
+cbutton7 = Button(clearButtonsFrame, text='7', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 7))
+cbutton7.grid(row=1, column=0, sticky='nsew', padx=3, pady=3)
+
+cbutton8 = Button(clearButtonsFrame, text='8', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 8))
+cbutton8.grid(row=1, column=1, sticky='nsew', padx=3, pady=3)
+
+cbutton9 = Button(clearButtonsFrame, text='9', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 9))
+cbutton9.grid(row=1, column=2, sticky='nsew', padx=3, pady=3)
+
+cbutton10 = Button(clearButtonsFrame, text='10', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 10))
+cbutton10.grid(row=1, column=3, sticky='nsew', padx=3, pady=3)
+
+cbutton11 = Button(clearButtonsFrame, text='11', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 11))
+cbutton11.grid(row=1, column=4, sticky='nsew', padx=3, pady=3)
+
+cbutton12 = Button(clearButtonsFrame, text='12', bg='red', fg='white', command=lambda:clear_sound_spot(boardDisplay, 12))
+cbutton12.grid(row=1, column=5, sticky='nsew', padx=3, pady=3)
+
 
 read_writeFrame = ttk.Frame(mainTab)
 read_writeFrame.grid(row=1, column=1, sticky='nsew', padx=400)
