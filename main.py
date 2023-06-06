@@ -88,12 +88,12 @@ def Spotify(state):
         if GPIO.input(5):
             state = spotifyState.pauseRelease
         else:
-            state = spotifyState.pauseSong
+            state = spotifyState.waitAction
     elif state == spotifyState.resumeSong:
         if GPIO.input(5):
             state = spotifyState.resumeRelease
         else:
-            state = spotifyState.resumeSong
+            state = spotifyState.waitAction
     elif state == spotifyState.pauseRelease:
         if not GPIO.input(5):
             state = spotifyState.waitAction
@@ -132,14 +132,16 @@ def Spotify(state):
         sp.start_playback(uris=[songURI])
         songPlaying = True
     elif state == spotifyState.pauseSong:
-        sp.pause_playback()
-        playback = sp.current_playback()
-        if playback and 'progress_ms' in playback:
-            resume_position = playback['progress_ms']
+        if songPlaying:
+            sp.pause_playback()
+            playback = sp.current_playback()
+            if playback and 'progress_ms' in playback:
+                resume_position = playback['progress_ms']
         songPlaying = False
     elif state == spotifyState.resumeSong:
-        sp.start_playback(uris=[songURI], position_ms=resume_position)
-        songPlaying = True
+        if not songPlaying:
+            sp.start_playback(uris=[songURI], position_ms=resume_position)
+            songPlaying = True
 
     return state
 ############################## SPOTIFY TASK ##############################
