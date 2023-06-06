@@ -283,7 +283,7 @@ def SaveLoad(state):
                 validName = True
             else:
                 print('file name cannot be empty string')
-        filePath = f'localSaveTerminal/{saveName}.txt'
+        filePath = f'localSave/{saveName}.txt'
         text = ''
         for i in range(12):
             if i < 11:
@@ -298,7 +298,7 @@ def SaveLoad(state):
         validFile = False
         while not validFile:
             fileName = input('Enter name of saved soundboard (without .txt): ')
-            filePath = f'localSaveTerminal/{fileName}.txt'
+            filePath = f'localSave/{fileName}.txt'
             if os.path.isfile(filePath):
                 with open(filePath, 'r') as txtFile:
                     text = txtFile.read()
