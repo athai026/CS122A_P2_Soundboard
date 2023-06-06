@@ -2,6 +2,7 @@ import touch
 import rfid
 import lcd
 import speaker
+import file
 import button
 import RPi.GPIO as GPIO
 from enum import Enum
@@ -32,9 +33,9 @@ period_gcd = 0.01
 songPlaying = False
 songURI = ''
 resume_position = 0
-files = {}
-soundID = {}
-IDtoPath = {'0': ''}
+nameToPath = file.name_path # name to path
+nameToID = file.name_ID # name to ID
+IDtoName = file.soundID_name # ID to name
 numSounds = 0
 soundBoard = []
 save = []
@@ -202,7 +203,7 @@ saveLoadState = Enum('saveLoadStates', ['start', 'waitAction', 'saveLocal', 'sav
 def SaveLoad(state):
     global soundBoard
     global save
-    global IDtoPath
+    global IDtoName
 
     # transitions
     if state == saveLoadState.start:
@@ -226,7 +227,7 @@ def SaveLoad(state):
         else:
             state = saveLoadState.waitAction
     elif state == saveLoadState.saveLocalRelease:
-        if not GPIO.intput(20):
+        if not GPIO.input(20):
             state = saveLoadState.waitAction
         else:
             state = saveLoadState.saveLocalRelease
@@ -304,7 +305,7 @@ def SaveLoad(state):
         soundBoard = []
         for i in range(12):
             if save[i] != '0':
-                tempSound = pygame.mixer.Sound(files[IDtoPath[save[i]]])
+                tempSound = pygame.mixer.Sound(nameToPath[IDtoName[save[i]]])
                 tempSound.set_volume(1.0)
             else: 
                 tempSound = ''
@@ -326,7 +327,7 @@ def SaveLoad(state):
         soundBoard = []
         for i in range(12):
             if save[i] != '0':
-                tempSound = pygame.mixer.Sound(files[IDtoPath[save[i]]])
+                tempSound = pygame.mixer.Sound(nameToPath[IDtoName[save[i]]])
                 tempSound.set_volume(1.0)
             else: 
                 tempSound = ''
@@ -340,8 +341,8 @@ def SaveLoad(state):
 
 ############################## HELPER FUNCTION ##############################
 def make_soundboard():
-    global files
-    global soundID
+    global nameToPath
+    global nameToID
     global soundBoard
     global save
 
@@ -356,15 +357,15 @@ def make_soundboard():
         pos1 += '.ogg'
         if pos1 == '.ogg':
             break
-        if pos1 in files:
+        if pos1 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos1 != '.ogg':
-        sound1 = pygame.mixer.Sound(files[pos1])
+        sound1 = pygame.mixer.Sound(nameToPath[pos1])
         sound1.set_volume(1.0)
-        id1 = soundID[pos1]
+        id1 = nameToID[pos1]
     else: 
         sound1 = ''
         id1 = '0'
@@ -376,15 +377,15 @@ def make_soundboard():
         pos2 += '.ogg'
         if pos2 == '.ogg':
             break
-        if pos2 in files:
+        if pos2 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos2 != '.ogg':
-        sound2 = pygame.mixer.Sound(files[pos2])
+        sound2 = pygame.mixer.Sound(nameToPath[pos2])
         sound2.set_volume(1.0)
-        id2 = soundID[pos2]
+        id2 = nameToID[pos2]
     else: 
         sound2 = ''
         id2 = '0'
@@ -396,15 +397,15 @@ def make_soundboard():
         pos3 += '.ogg'
         if pos3 == '.ogg':
             break
-        if pos3 in files:
+        if pos3 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos3 != '.ogg':
-        sound3 = pygame.mixer.Sound(files[pos3])
+        sound3 = pygame.mixer.Sound(nameToPath[pos3])
         sound3.set_volume(1.0)
-        id3 = soundID[pos3]
+        id3 = nameToID[pos3]
     else: 
         sound3 = ''
         id3 = '0'
@@ -416,15 +417,15 @@ def make_soundboard():
         pos4 += '.ogg'
         if pos4 == '.ogg':
             break
-        if pos4 in files:
+        if pos4 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos4 != '.ogg':
-        sound4 = pygame.mixer.Sound(files[pos4])
+        sound4 = pygame.mixer.Sound(nameToPath[pos4])
         sound4.set_volume(1.0)
-        id4 = soundID[pos4]
+        id4 = nameToID[pos4]
     else: 
         sound4 = ''
         id4 = '0'
@@ -436,15 +437,15 @@ def make_soundboard():
         pos5 += '.ogg'
         if pos5 == '.ogg':
             break
-        if pos5 in files:
+        if pos5 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos5 != '.ogg':
-        sound5 = pygame.mixer.Sound(files[pos5])
+        sound5 = pygame.mixer.Sound(nameToPath[pos5])
         sound5.set_volume(1.0)
-        id5 = soundID[pos5]
+        id5 = nameToID[pos5]
     else: 
         sound5 = ''
         id5 = '0'
@@ -456,15 +457,15 @@ def make_soundboard():
         pos6 += '.ogg'
         if pos6 == '.ogg':
             break
-        if pos6 in files:
+        if pos6 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos6 != '.ogg':
-        sound6 = pygame.mixer.Sound(files[pos6])
+        sound6 = pygame.mixer.Sound(nameToPath[pos6])
         sound6.set_volume(1.0)
-        id6 = soundID[pos6]
+        id6 = nameToID[pos6]
     else: 
         sound6 = ''
         id6 = '0'
@@ -476,15 +477,15 @@ def make_soundboard():
         pos7 += '.ogg'
         if pos7 == '.ogg':
             break
-        if pos7 in files:
+        if pos7 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos7 != '.ogg':
-        sound7 = pygame.mixer.Sound(files[pos7])
+        sound7 = pygame.mixer.Sound(nameToPath[pos7])
         sound7.set_volume(1.0)
-        id7 = soundID[pos7]
+        id7 = nameToID[pos7]
     else: 
         sound7 = ''
         id7 = '0'
@@ -496,15 +497,15 @@ def make_soundboard():
         pos8 += '.ogg'
         if pos8 == '.ogg':
             break
-        if pos8 in files:
+        if pos8 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos8 != '.ogg':
-        sound8 = pygame.mixer.Sound(files[pos8])
+        sound8 = pygame.mixer.Sound(nameToPath[pos8])
         sound8.set_volume(1.0)
-        id8 = soundID[pos8]
+        id8 = nameToID[pos8]
     else: 
         sound8 = ''
         id8 = '0'
@@ -516,15 +517,15 @@ def make_soundboard():
         pos9 += '.ogg'
         if pos9 == '.ogg':
             break
-        if pos9 in files:
+        if pos9 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos9 != '.ogg':
-        sound9 = pygame.mixer.Sound(files[pos9])
+        sound9 = pygame.mixer.Sound(nameToPath[pos9])
         sound9.set_volume(1.0)
-        id9 = soundID[pos9]
+        id9 = nameToID[pos9]
     else: 
         sound9 = ''
         id9 = '0'
@@ -536,15 +537,15 @@ def make_soundboard():
         pos10 += '.ogg'
         if pos10 == '.ogg':
             break
-        if pos10 in files:
+        if pos10 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos10 != '.ogg':
-        sound10 = pygame.mixer.Sound(files[pos10])
+        sound10 = pygame.mixer.Sound(nameToPath[pos10])
         sound10.set_volume(1.0)
-        id10 = soundID[pos10]
+        id10 = nameToID[pos10]
     else: 
         sound10 = ''
         id10 = '0'
@@ -556,15 +557,15 @@ def make_soundboard():
         pos11 += '.ogg'
         if pos11 == '.ogg':
             break
-        if pos11 in files:
+        if pos11 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos11 != '.ogg':
-        sound11 = pygame.mixer.Sound(files[pos11])
+        sound11 = pygame.mixer.Sound(nameToPath[pos11])
         sound11.set_volume(1.0)
-        id11 = soundID[pos11]
+        id11 = nameToID[pos11]
     else: 
         sound11 = ''
         id11 = '0'
@@ -576,15 +577,15 @@ def make_soundboard():
         pos12 += '.ogg'
         if pos12 == '.ogg':
             break
-        if pos12 in files:
+        if pos12 in nameToPath:
             validSound = True
         else:
             print('Not a valid sound')
     validSound = False
     if pos12 != '.ogg':
-        sound12 = pygame.mixer.Sound(files[pos12])
+        sound12 = pygame.mixer.Sound(nameToPath[pos12])
         sound12.set_volume(1.0)
-        id12 = soundID[pos12]
+        id12 = nameToID[pos12]
     else: 
         sound12 = ''
         id12 = '0'
@@ -592,27 +593,27 @@ def make_soundboard():
     save.append(id12)
 
 def add_samples(directory):
-    global files
+    global nameToPath
     global numSounds
-    global IDtoPath
+    global IDtoName
 
     sorted_dir = sorted(os.listdir(directory))
     for item in sorted_dir:
         path = os.path.join(directory, item)
         if os.path.isfile(path):
             if item[-4:] == '.ogg':
-                files[item] = path
-                soundID[item] = numSounds
-                IDtoPath[str(numSounds)] = item
+                nameToPath[item] = path
+                nameToID[item] = numSounds
+                IDtoName[str(numSounds)] = item
                 numSounds += 1
         elif os.path.isdir(path):
             add_samples(path)
-    IDtoPath['0'] = ''
+    IDtoName['0'] = ''
 ############################## HELPER FUNCTION ##############################
 
 def main():
     global numTasks
-    global files
+    global nameToPath
     lcd.lcd_start()
     lcd.lcd_string('touch ready', lcd.LCD_LINE_1)
 
@@ -620,7 +621,7 @@ def main():
     pygame.mixer.set_num_channels(12)
 
     add_samples('samples')
-    print(files)
+    print(nameToPath)
     make_soundboard()
 
     task1 = task(saveLoadState.start, period_gcd, 0, SaveLoad)

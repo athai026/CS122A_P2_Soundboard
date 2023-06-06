@@ -306,7 +306,7 @@ def add_samples(directory, parent):
         path = os.path.join(directory, item)
         if os.path.isfile(path):
             if item[-4:] == '.ogg':
-                soundsList.insert(parent, tk.END, iid=file.files[item], value=(item,), text=str(path))
+                soundsList.insert(parent, tk.END, iid=file.name_ID[item], value=(item,), text=str(path))
         elif os.path.isdir(path):
             folder = soundsList.insert(parent, tk.END, value=item)
             add_samples(path, folder)
