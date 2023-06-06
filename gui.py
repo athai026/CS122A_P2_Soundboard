@@ -156,13 +156,7 @@ def load_onto_soundboard(playSound):
         sound12 = ''
     sounds.append(sound12)
 
-    while playSound:
-        touch.gui_sense(soundBoard, soundsList, sounds)
-        if GPIO.input(19):
-            for x in sounds:
-                if x:
-                    x.stop()
-            break
+    touch.main(sounds)
 
 def load_in_soundBoard():
     global soundBoard
