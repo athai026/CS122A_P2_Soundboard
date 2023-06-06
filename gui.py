@@ -3,21 +3,17 @@ from tkinter import ttk
 from tkinter import *
 import sv_ttk
 import os
-from tkinter.messagebox import showinfo
 import pygame
-import csv
-import pandas as pd
 
 import file
 import touch
 import rfid
 import lcd
-import speaker
-import button
-import RPi.GPIO as GPIO
 
 numSounds = 0
 soundBoard = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+
+# add sound bite to soundboard sequentially
 def add_sound(boardDisplay):
     global numSounds
     global soundBoard
@@ -35,6 +31,7 @@ def add_sound(boardDisplay):
                     print(soundBoard)
                     break
 
+# add sound bit to specific spot on soundboard
 def add_sound_spot(boardDisplay, position):
     global numSounds
     global soundBoard
@@ -48,13 +45,15 @@ def add_sound_spot(boardDisplay, position):
         numSounds += 1
         print(soundBoard)
 
+# clear specific spot on soundboard
 def clear_sound_spot(boardDisplay, position):
     global numSounds
     global soundBoard
     boardDisplay[position-1].configure(text=f'sound {str(position)}:\n')
     soundBoard[position-1] = '0'
     numSounds -= 1
-   
+
+# clear whole soundboard 
 def clear_soundboard(boardDisplay):
     global numSounds
     for i in range(12):
@@ -62,6 +61,7 @@ def clear_soundboard(boardDisplay):
         soundBoard[i] = '0'
     numSounds = 0
 
+# play sound bite from GUI
 def play_sound():
     selected_sound = soundsList.selection()[0]
     soundPath = soundsList.item(selected_sound)['text']
@@ -70,6 +70,7 @@ def play_sound():
         pygame.mixer.music.play()
         print(f'played sound {soundPath}')
 
+# start playing soundboard
 def load_onto_soundboard(playSound):
     sounds = []
     if soundBoard[0] != '0':
@@ -158,6 +159,7 @@ def load_onto_soundboard(playSound):
 
     touch.main(sounds)
 
+# scan RFID to load a saved soundboard
 def load_in_soundBoard():
     global soundBoard
     # use rfid.read()
@@ -170,11 +172,13 @@ def load_in_soundBoard():
         else:
             boardDisplay[i].configure(text=f'sound {str(i+1)}:\n')
 
+# write soundboard onto RFID card
 def save_soundBoard():
     # use rfid.write()
     rfid.gui_write(soundBoard)
     print('write')
 
+# locally save soundboard
 def local_save_soundBoard(fileName):
     if fileName == '':
         return
@@ -192,9 +196,11 @@ def local_save_soundBoard(fileName):
     with open(filePath, 'w') as txtFile:
         txtFile.write(text)
     
+    inputName.delete(0, END)
     reloadSaves()
-    
-def load_local_soundBoard():
+
+# load in locally saved soundboard 
+def local_load_soundBoard():
     global soundBoard
     soundBoard = []
 
@@ -214,30 +220,31 @@ def load_local_soundBoard():
         else:
             boardDisplay[i].configure(text=f'sound {str(i+1)}:\n')
 
+# refresh treeview of locally saved soundboard each time new soundboard is saved
 def reloadSaves():
     localSaveList.delete(*localSaveList.get_children())
     add_saves('localSave', '')
 
+# delete locally saved soundboard
 def delete_board():
     selected_board = localSaveList.selection()[0]
     boardPath = localSaveList.item(selected_board)['text']
     localSaveList.delete(selected_board)
     os.remove(boardPath)
 
-# soundID = 1
+# initialize GUI treeview of all available sounds
 def add_samples(directory, parent):
-    # global soundID
     sorted_dir = sorted(os.listdir(directory))
     for item in sorted_dir:
         path = os.path.join(directory, item)
         if os.path.isfile(path):
             if item[-4:] == '.ogg':
                 soundsList.insert(parent, tk.END, iid=file.files[item], value=(item,), text=str(path))
-                # soundID += 1
         elif os.path.isdir(path):
             folder = soundsList.insert(parent, tk.END, value=item)
             add_samples(path, folder)
 
+# initialize GUI treeview of all locally saved soundboards
 def add_saves(directory, parent):
     for item in os.listdir(directory):
         path = os.path.join(directory, item)
@@ -248,6 +255,8 @@ def add_saves(directory, parent):
             folder = localSaveList.insert(parent, tk.END, value=item)
             add_samples(path, folder)
 
+
+##################### GUI #####################
 window = tk.Tk()
 window.title('Soundboard Builder')
 window.geometry('1450x750')
@@ -447,7 +456,7 @@ localSaveScroll = ttk.Scrollbar(localLoadFrame, orient=tk.VERTICAL, command=loca
 localSaveList.configure(yscroll=localSaveScroll.set)
 localSaveScroll.grid(row=0, column=1, sticky='ns')
 
-loadBoard = ttk.Button(localLoadFrame, text='Load in Soundboard', style='Accent.TButton', command=lambda:load_local_soundBoard())
+loadBoard = ttk.Button(localLoadFrame, text='Load in Soundboard', style='Accent.TButton', command=lambda:local_load_soundBoard())
 loadBoard.grid(row=2, column=0, sticky='s', pady=10)
 
 deleteBoard = ttk.Button(localLoadFrame, text='Delete Soundboard', style='Accent.TButton', command=lambda:delete_board())
