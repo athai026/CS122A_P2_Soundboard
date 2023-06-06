@@ -276,7 +276,13 @@ def SaveLoad(state):
 
     # state actions
     if state == saveLoadState.saveLocal:
-        saveName = input('Enter a name for your soundboard: ')
+        validName = False
+        while not validName:
+            saveName = input('Enter a name for your soundboard: ')
+            if saveName:
+                validName = True
+            else:
+                print('file name cannot be empty string')
         filePath = f'localSaveTerminal/{saveName}.txt'
         text = ''
         for i in range(12):
