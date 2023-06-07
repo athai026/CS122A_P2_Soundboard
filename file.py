@@ -9,10 +9,10 @@ def assignID(directory):
         if os.path.isfile(path):
             if item[-4:] == '.ogg':
                 if item not in name_ID:
-                    print(f'new sound bite {item} with ID {soundID}')
-                    name_ID[item] = soundID
+                    print(f'new sound bite {item} with ID {str(soundID)}')
+                    name_ID[item] = str(soundID)
                     name_path[item] = path
-                    soundID_name[soundID] = item
+                    soundID_name[(str(soundID))] = item
                     soundID += 1
                 else:
                     print(f'sound bite {item} already existed with ID {name_ID[item]}')
@@ -39,6 +39,8 @@ with open('namePath.txt', 'wb') as file:
 with open('IDName.txt', 'wb') as file:
     pickle.dump(soundID_name, file)
 print(name_ID)
+print(name_path)
+print(soundID_name)
 
 # files.txt: sound name to unit ID (starting at 1)
 # names.text: sound name to path

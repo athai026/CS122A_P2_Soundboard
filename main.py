@@ -204,6 +204,7 @@ def SaveLoad(state):
     global soundBoard
     global save
     global IDtoName
+    global nameToPath
 
     # transitions
     if state == saveLoadState.start:
@@ -626,8 +627,7 @@ def main():
     pygame.mixer.init()
     pygame.mixer.set_num_channels(12)
 
-    add_samples('samples')
-    print(nameToPath)
+    # add_samples('samples')
     make_soundboard()
 
     task1 = task(saveLoadState.start, period_gcd, 0, SaveLoad)
