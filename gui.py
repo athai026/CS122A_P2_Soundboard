@@ -108,8 +108,9 @@ def add_sound_spot(boardDisplay, position):
     soundName = soundsList.item(selected_sound)['values'][0]
     if soundName[-4:] == '.ogg':
         boardDisplay[position-1].configure(text=f'sound {str(position)}:\n{soundName}')
+        if soundBoard[position-1] == '0':
+            numSounds += 1
         soundBoard[position-1] = selected_sound
-        numSounds += 1
         print(soundBoard)
 
 # clear specific spot on soundboard
